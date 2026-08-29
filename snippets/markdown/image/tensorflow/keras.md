@@ -34,12 +34,26 @@ normalized_image_array = (image_array.astype(np.float32) / 127.5) - 1
 data[0] = normalized_image_array
 
 # Predicts the model
-prediction = model.predict(data)
+prediction = model.predict(data, verbose=0)
+
 index = np.argmax(prediction)
-class_name = class_names[index]
+class_name = class_names[index].strip()
 confidence_score = prediction[0][index]
 
+# Minimum confidence required
+THRESHOLD = 0.80
+
+# Only Peacock and Parrot are valid classes
+VALID_CLASSES = ["Peacock", "Parrot"]
+
+if class_name in VALID_CLASSES and confidence_score >= THRESHOLD:
+    print("Class:", class_name)
+    print("Confidence Score:", confidence_score)
+else:
+    print("Class: No Match")
+    print("Confidence Score:", confidence_score)
+
 # Print prediction and confidence score
-print("Class:", class_name[2:], end="")
+print("Class:", class_name)
 print("Confidence Score:", confidence_score)
 ```
